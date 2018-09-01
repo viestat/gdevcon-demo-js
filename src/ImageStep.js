@@ -54,8 +54,19 @@ const fetchImages = (cb) => {
 
 const styles = {
   root: {
+    flex: 1, 
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'column'
+  },
+  stepContainer: {
     maxWidth: 400,
-    flexGrow: 1,
+    minWidth: 400,
+    flex: 1,
+  },
+  gridListContainer: {
+    minWidth: '100%',
   },
   header: {
     display: 'flex',
@@ -67,8 +78,12 @@ const styles = {
     backgroundColor: 'white',
   },
   img: {
-    height: 255,
-    maxWidth: 400,
+    overflow: 'hidden',
+    width: '100%',
+  },
+  favedImg: {
+    minHeight: 191,
+    minWidth: 180,
     overflow: 'hidden',
     width: '100%',
   },
@@ -175,69 +190,78 @@ export default class ImageStep extends React.Component {
     const { activeStep, length, images, favedImages } = this.state;
     return (
       <div style={styles.root}>
-        <Paper square elevation={0} style={styles.header}>
-          <Checkbox
-            icon={<FavoriteBorder />}
-            checkedIcon={<Favorite />}
-            checked={this.isFaved()}
-            value="checkedH"
-            onChange={this.handleFav}
+        <div style={styles.stepContainer}>
+          <Paper square elevation={0} style={styles.header}>
+            <Checkbox
+              icon={<FavoriteBorder />}
+              checkedIcon={<Favorite />}
+              checked={this.isFaved()}
+              value="checkedH"
+              onChange={this.handleFav}
+            />
+            <IconButton  aria-label="SaveAlt">
+              <a href={images[activeStep]} download>
+                <SaveAltIcon />
+              </a>
+            </IconButton>
+            <Typography>IMG ID:{activeStep}</Typography>
+          </Paper>
+          <SwipeableViews
+            axis={'x'}
+            index={this.state.activeStep}
+            onChangeIndex={this.handleStepChange}
+            enableMouseEvents
+          >
+            {images.map((image, i) => (
+              <img key={i} style={styles.img} src={image} />
+            ))}
+          </SwipeableViews>
+          <MobileStepper
+            steps={length}
+            position="static"
+            activeStep={activeStep}
+            style={styles.mobileStepper}
+            nextButton={
+              <Button size="small" onClick={this.handleNext} disabled={activeStep === length - 1}>
+                Next
+                {<KeyboardArrowRight />}
+              </Button>
+            }
+            backButton={
+              <Button size="small" onClick={this.handleBack} disabled={activeStep === 0}>
+                {<KeyboardArrowLeft />}
+                Back
+              </Button>
+            }
           />
-          <IconButton  aria-label="SaveAlt">
-            <a href={images[activeStep]} download>
-              <SaveAltIcon />
-            </a>
-          </IconButton>
-          <Typography>IMG ID:{activeStep}</Typography>
-        </Paper>
-        <SwipeableViews
-          axis={'x'}
-          index={this.state.activeStep}
-          onChangeIndex={this.handleStepChange}
-          enableMouseEvents
-        >
-          {images.map((image, i) => (
-            <img key={i} style={styles.img} src={image} />
-          ))}
-        </SwipeableViews>
-        <MobileStepper
-          steps={length}
-          position="static"
-          activeStep={activeStep}
-          style={styles.mobileStepper}
-          nextButton={
-            <Button size="small" onClick={this.handleNext} disabled={activeStep === length - 1}>
-              Next
-              {<KeyboardArrowRight />}
-            </Button>
-          }
-          backButton={
-            <Button size="small" onClick={this.handleBack} disabled={activeStep === 0}>
-              {<KeyboardArrowLeft />}
-              Back
-            </Button>
-          }
-        />
-        <GridList style={styles.gridList} cols={2.5}>
-          {favedImages.map((favIndex) => {
-            return (
-              <GridListTile key={"tile.img"}>
-                <img src={images[favIndex]} />
-                <GridListTileBar
-                  title={`ID: ${favIndex}`}
-                  actionIcon={
-                    <IconButton>
-                      <Favorite
-                        style={styles.favBorder}
-                        onClick={()=>this.unFavImageById(favIndex)}
-                      />
-                    </IconButton>
-                  }
-                />
-              </GridListTile>
-            );
-          })}
-        </GridList>
+        </div>
+        <div style={styles.gridListContainer}>
+          <GridList
+            style={styles.gridList}
+            cols={3}
+            cellHeight={'auto'}
+            spacing={16}
+          >
+            {favedImages.map((favIndex) => {
+              return (
+                <GridListTile key={"tile.img"}>
+                  <img style={styles.favedImg} src={images[favIndex]} />
+                  <GridListTileBar
+                    title={`ID: ${favIndex}`}
+                    actionIcon={
+                      <IconButton>
+                        <Favorite
+                          style={styles.favBorder}
+                          onClick={()=>this.unFavImageById(favIndex)}
+                        />
+                      </IconButton>
+                    }
+                  />
+                </GridListTile>
+              );
+            })}
+          </GridList>
+        </div>
       </div>
     );
   }
