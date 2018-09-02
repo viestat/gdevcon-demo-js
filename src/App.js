@@ -9,7 +9,7 @@ class App extends Component {
       <div className="App">
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">The right tool for the job</h1>
+          <h1 className="App-title">Face Detector</h1>
         </header>
         <main className="App-main">
           <ImageStep />
