@@ -1,37 +1,17 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import Favorite from '@material-ui/icons/Favorite';
 import GridListTile from '@material-ui/core/GridListTile';
 import GridListTileBar from '@material-ui/core/GridListTileBar';
 import IconButton from '@material-ui/core/IconButton';
 import GridList from '@material-ui/core/GridList';
 
-const styles = {
-  container: {
-    minWidth: '100%',
-    maxWidth: '100%'
-  },
-  img: {
-    overflow: 'hidden',
-    width: '100%'
-  },
-  favedImg: {
-    maxHeight: 320,
-    maxWidth: 240,
-    overflow: 'hidden',
-    width: '100%'
-  },
-  gridList: {
-    flexWrap: 'nowrap',
-    // Promote the list into his own layer on Chrome. This cost memory but helps keeping high FPS.
-    transform: 'translateZ(0)',
-    margin: 12
-  },
-  favBorder: {
-    color: 'red'
-  }
-};
-
 export default class ImageGallery extends Component {
+  static propTypes = {
+    images: PropTypes.array,
+    ids: PropTypes.array,
+    onClick: PropTypes.func
+  };
   constructor(props) {
     super(props);
     this.state = {};
@@ -76,3 +56,29 @@ export default class ImageGallery extends Component {
     );
   }
 }
+
+const styles = {
+  container: {
+    minWidth: '100%',
+    maxWidth: '100%'
+  },
+  img: {
+    overflow: 'hidden',
+    width: '100%'
+  },
+  favedImg: {
+    maxHeight: 320,
+    maxWidth: 240,
+    overflow: 'hidden',
+    width: '100%'
+  },
+  gridList: {
+    flexWrap: 'nowrap',
+    // Promote the list into his own layer on Chrome. This cost memory but helps keeping high FPS.
+    transform: 'translateZ(0)',
+    margin: 12
+  },
+  favBorder: {
+    color: 'red'
+  }
+};

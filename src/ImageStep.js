@@ -35,43 +35,6 @@ const fetchImages = cb => {
     });
 };
 
-const styles = {
-  root: {
-    flex: 1,
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    flexDirection: 'column',
-    maxWidth: '100%'
-  },
-  stepContainer: {
-    width: '100%',
-    maxWidth: 400,
-    flex: 1
-  },
-  gridListContainer: {
-    minWidth: '100%',
-    maxWidth: '100%'
-  },
-  header: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-around',
-    height: 50,
-    paddingLeft: 4,
-    marginBottom: 20,
-    backgroundColor: 'white'
-  },
-  img: {
-    overflow: 'hidden',
-    width: '100%'
-  },
-  loader: {
-    margin: 30,
-    color: '#6cbcde'
-  }
-};
-
 export default class ImageStep extends Component {
   constructor(props) {
     super(props);
@@ -194,3 +157,40 @@ export default class ImageStep extends Component {
     );
   }
 }
+
+const styles = {
+  root: {
+    flex: 1,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'column',
+    maxWidth: '100%'
+  },
+  stepContainer: {
+    width: '100%',
+    maxWidth: 400,
+    flex: 1
+  },
+  gridListContainer: {
+    minWidth: '100%',
+    maxWidth: '100%'
+  },
+  header: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-around',
+    height: 50,
+    paddingLeft: 4,
+    marginBottom: 20,
+    backgroundColor: 'white'
+  },
+  img: {
+    overflow: 'hidden',
+    width: '100%'
+  },
+  loader: {
+    margin: 30,
+    color: '#6cbcde'
+  }
+};

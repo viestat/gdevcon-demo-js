@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import Checkbox from '@material-ui/core/Checkbox';
 import Favorite from '@material-ui/icons/Favorite';
 import FavoriteBorder from '@material-ui/icons/FavoriteBorder';
@@ -12,27 +13,18 @@ import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import SwipeableViews from 'react-swipeable-views';
 
-const styles = {
-  header: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-around',
-    height: 50,
-    paddingLeft: 4,
-    marginBottom: 20,
-    backgroundColor: 'white'
-  },
-  img: {
-    overflow: 'hidden',
-    width: '100%'
-  },
-  loader: {
-    margin: 30,
-    color: '#6cbcde'
-  }
-};
-
 export default class ImageStep extends Component {
+  static propTypes = {
+    activeStep: PropTypes.number,
+    length: PropTypes.number,
+    images: PropTypes.array,
+    isFaved: PropTypes.func,
+    handleFav: PropTypes.func,
+    onChangeIndex: PropTypes.func,
+    onNext: PropTypes.func,
+    onBack: PropTypes.func
+  };
+
   render() {
     const {
       activeStep,
@@ -100,3 +92,23 @@ export default class ImageStep extends Component {
     );
   }
 }
+
+const styles = {
+  header: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-around',
+    height: 50,
+    paddingLeft: 4,
+    marginBottom: 20,
+    backgroundColor: 'white'
+  },
+  img: {
+    overflow: 'hidden',
+    width: '100%'
+  },
+  loader: {
+    margin: 30,
+    color: '#6cbcde'
+  }
+};
