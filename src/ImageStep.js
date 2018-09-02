@@ -14,6 +14,7 @@ import Button from '@material-ui/core/Button';
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import SwipeableViews from 'react-swipeable-views';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const baseUrl = 'http://192.168.192.42:8001/image_processing';
 
@@ -97,6 +98,10 @@ const styles = {
   },
   favBorder: {
     color: 'red'
+  },
+  loader: {
+    margin: 30,
+    color: '#6cbcde'
   }
 };
 
@@ -108,6 +113,7 @@ export default class ImageStep extends React.Component {
       length: 0,
       images: [],
       favedImages: [],
+      loaded: false
 
     };
   }
@@ -116,7 +122,8 @@ export default class ImageStep extends React.Component {
     return fetchImages((vals, len) => {
       return this.setState({
         length: len,
-        images: vals
+        images: vals,
+        loaded: true
       });
     });
   }
@@ -188,55 +195,74 @@ export default class ImageStep extends React.Component {
     return;
   }
 
+  createStepper = () => {
+    const { activeStep, length, images } = this.state;
+    return (
+      <div>
+        <Paper square elevation={0} style={styles.header}>
+          <Checkbox
+            icon={<FavoriteBorder />}
+            checkedIcon={<Favorite />}
+            checked={this.isFaved()}
+            value="checkedH"
+            onChange={this.handleFav}
+          />
+          <IconButton  aria-label="SaveAlt">
+            <a href={images[activeStep]} download>
+              <SaveAltIcon />
+            </a>
+          </IconButton>
+          <Typography>IMG ID:{activeStep}</Typography>
+        </Paper>
+        <SwipeableViews
+          axis={'x'}
+          index={this.state.activeStep}
+          onChangeIndex={this.handleStepChange}
+          enableMouseEvents
+        >
+          {images.map((image, i) => (
+            <img key={i} style={styles.img} src={image} />
+          ))}
+        </SwipeableViews>
+        <MobileStepper
+          steps={length}
+          position="static"
+          activeStep={activeStep}
+          style={styles.mobileStepper}
+          nextButton={
+            <Button size="small" onClick={this.handleNext} disabled={activeStep === length - 1}>
+              Next
+              {<KeyboardArrowRight />}
+            </Button>
+          }
+          backButton={
+            <Button size="small" onClick={this.handleBack} disabled={activeStep === 0}>
+              {<KeyboardArrowLeft />}
+              Back
+            </Button>
+          }
+        />
+      </div>
+    );
+  }
+
+  createLoader = () => {
+    return (
+      <CircularProgress style={styles.loader} size={50} />
+    );
+  }
+
+  renderStepper = () => {
+    const { loaded } = this.state;
+    return loaded ? this.createStepper() : this.createLoader();
+  }
 
   render() {
     const { activeStep, length, images, favedImages } = this.state;
     return (
       <div style={styles.root}>
         <div style={styles.stepContainer}>
-          <Paper square elevation={0} style={styles.header}>
-            <Checkbox
-              icon={<FavoriteBorder />}
-              checkedIcon={<Favorite />}
-              checked={this.isFaved()}
-              value="checkedH"
-              onChange={this.handleFav}
-            />
-            <IconButton  aria-label="SaveAlt">
-              <a href={images[activeStep]} download>
-                <SaveAltIcon />
-              </a>
-            </IconButton>
-            <Typography>IMG ID:{activeStep}</Typography>
-          </Paper>
-          <SwipeableViews
-            axis={'x'}
-            index={this.state.activeStep}
-            onChangeIndex={this.handleStepChange}
-            enableMouseEvents
-          >
-            {images.map((image, i) => (
-              <img key={i} style={styles.img} src={image} />
-            ))}
-          </SwipeableViews>
-          <MobileStepper
-            steps={length}
-            position="static"
-            activeStep={activeStep}
-            style={styles.mobileStepper}
-            nextButton={
-              <Button size="small" onClick={this.handleNext} disabled={activeStep === length - 1}>
-                Next
-                {<KeyboardArrowRight />}
-              </Button>
-            }
-            backButton={
-              <Button size="small" onClick={this.handleBack} disabled={activeStep === 0}>
-                {<KeyboardArrowLeft />}
-                Back
-              </Button>
-            }
-          />
+          {this.renderStepper()}
         </div>
         <div style={styles.gridListContainer}>
           <GridList
