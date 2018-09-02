@@ -58,11 +58,12 @@ const styles = {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    flexDirection: 'column'
+    flexDirection: 'column',
+    maxWidth: '100%'
   },
   stepContainer: {
+    width: '100%',
     maxWidth: 400,
-    minWidth: 400,
     flex: 1,
   },
   gridListContainer: {
