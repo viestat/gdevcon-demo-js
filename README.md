@@ -10,7 +10,7 @@
 
 
 ## Requirements
-Please make sure that you compluy with the following requirements in order to run this application:
+Please make sure that you comply with the following requirements in order to run this application:
 - Node version >= `9.3.0`
 - NPM version >= `5.5.1`
 
