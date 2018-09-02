@@ -1,12 +1,9 @@
-import React from 'react';
+import React, { Component } from 'react';
 import Checkbox from '@material-ui/core/Checkbox';
 import Favorite from '@material-ui/icons/Favorite';
 import FavoriteBorder from '@material-ui/icons/FavoriteBorder';
-import GridListTile from '@material-ui/core/GridListTile';
-import GridListTileBar from '@material-ui/core/GridListTileBar';
 import IconButton from '@material-ui/core/IconButton';
 import SaveAltIcon from '@material-ui/icons/SaveAlt';
-import GridList from '@material-ui/core/GridList';
 import MobileStepper from '@material-ui/core/MobileStepper';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
@@ -15,19 +12,20 @@ import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import SwipeableViews from 'react-swipeable-views';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import ImageGallery from './ImageGallery';
 
 const baseUrl = `http://${process.env.REACT_APP_URL}/image_processing`;
 
 const bufferLength = `${baseUrl}/image_buffer_length`;
 
-const imagesById = (id) => `${baseUrl}/image?ID=${id}`;
+const imagesById = id => `${baseUrl}/image?ID=${id}`;
 
-const fetchImages = (cb) => {
+const fetchImages = cb => {
   return fetch(bufferLength, { mode: 'cors' })
-    .then((res) => {
+    .then(res => {
       return res.json();
     })
-    .then((jsonRes) => {
+    .then(jsonRes => {
       const len = jsonRes.ImageBufferLength;
       const imgRequests = [];
 
@@ -35,27 +33,23 @@ const fetchImages = (cb) => {
         imgRequests.push(fetch(imagesById(i), { mode: 'cors' }));
       }
       return Promise.all(imgRequests)
-      .then(imgRes => {
-
-        return imgRes.map(res => {
-          return res.blob()
-          .then(res => {
-            var a = URL.createObjectURL(res)
-            return a;
-          })
+        .then(imgRes => {
+          return imgRes.map(res => {
+            return res.blob().then(res => {
+              var a = URL.createObjectURL(res);
+              return a;
+            });
+          });
+        })
+        .then(urls => {
+          return Promise.all(urls).then(vals => cb(vals, len));
         });
-      })
-      .then(urls => {
-        return Promise.all(urls)
-        .then(vals => cb(vals, len));
-      });
-    })
+    });
 };
-
 
 const styles = {
   root: {
-    flex: 1, 
+    flex: 1,
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
@@ -65,11 +59,11 @@ const styles = {
   stepContainer: {
     width: '100%',
     maxWidth: 400,
-    flex: 1,
+    flex: 1
   },
   gridListContainer: {
     minWidth: '100%',
-    maxWidth: '100%',
+    maxWidth: '100%'
   },
   header: {
     display: 'flex',
@@ -78,26 +72,11 @@ const styles = {
     height: 50,
     paddingLeft: 4,
     marginBottom: 20,
-    backgroundColor: 'white',
+    backgroundColor: 'white'
   },
   img: {
     overflow: 'hidden',
-    width: '100%',
-  },
-  favedImg: {
-    maxHeight: 320,
-    maxWidth: 240,
-    overflow: 'hidden',
-    width: '100%',
-  },
-  gridList: {
-    flexWrap: 'nowrap',
-    // Promote the list into his own layer on Chrome. This cost memory but helps keeping high FPS.
-    transform: 'translateZ(0)',
-    margin: 12,
-  },
-  favBorder: {
-    color: 'red'
+    width: '100%'
   },
   loader: {
     margin: 30,
@@ -105,7 +84,7 @@ const styles = {
   }
 };
 
-export default class ImageStep extends React.Component {
+export default class ImageStep extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -114,7 +93,6 @@ export default class ImageStep extends React.Component {
       images: [],
       favedImages: [],
       loaded: false
-
     };
   }
 
@@ -130,13 +108,13 @@ export default class ImageStep extends React.Component {
 
   handleNext = () => {
     this.setState(prevState => ({
-      activeStep: prevState.activeStep + 1,
+      activeStep: prevState.activeStep + 1
     }));
   };
 
   handleBack = () => {
     this.setState(prevState => ({
-      activeStep: prevState.activeStep - 1,
+      activeStep: prevState.activeStep - 1
     }));
   };
 
@@ -146,54 +124,52 @@ export default class ImageStep extends React.Component {
 
   favImage = () => {
     const { activeStep, favedImages } = this.state;
-    if(favedImages.indexOf(activeStep) === -1) {
-      return this.setState({favedImages: [activeStep, ...favedImages]});
+    if (favedImages.indexOf(activeStep) === -1) {
+      return this.setState({ favedImages: [activeStep, ...favedImages] });
     }
 
     return;
-  }
+  };
 
   isFaved = () => {
     const { activeStep, favedImages } = this.state;
     const index = favedImages.indexOf(activeStep);
-    if(index === -1) {
+    if (index === -1) {
       return false;
     }
 
     return true;
-  }
+  };
 
   unFavImage = () => {
     const { activeStep, favedImages } = this.state;
     const index = favedImages.indexOf(activeStep);
-    if(index !== -1) {
+    if (index !== -1) {
       favedImages.splice(index, 1);
-      return this.setState({favedImages: favedImages});
+      return this.setState({ favedImages: favedImages });
     }
 
     return;
-  }
+  };
 
   handleFav = (e, checked) => {
-    const x = this.isFaved();
-    if(this.isFaved()) {
+    if (this.isFaved()) {
       return this.unFavImage();
     }
     return this.favImage();
+  };
 
-  }
-
-  unFavImageById = (id) => {
-    console.log('here', id)
+  unFavImageById = id => {
+    console.log('here', id);
     const { favedImages } = this.state;
     const index = favedImages.indexOf(id);
-    if(index !== -1) {
+    if (index !== -1) {
       favedImages.splice(index, 1);
-      return this.setState({favedImages: favedImages});
+      return this.setState({ favedImages: favedImages });
     }
 
     return;
-  }
+  };
 
   createStepper = () => {
     const { activeStep, length, images } = this.state;
@@ -207,12 +183,15 @@ export default class ImageStep extends React.Component {
             value="checkedH"
             onChange={this.handleFav}
           />
-          <IconButton  aria-label="SaveAlt">
+          <IconButton aria-label="SaveAlt">
             <a href={images[activeStep]} download>
               <SaveAltIcon />
             </a>
           </IconButton>
-          <Typography>IMG ID:{activeStep}</Typography>
+          <Typography>
+            IMG ID:
+            {activeStep}
+          </Typography>
         </Paper>
         <SwipeableViews
           axis={'x'}
@@ -221,7 +200,7 @@ export default class ImageStep extends React.Component {
           enableMouseEvents
         >
           {images.map((image, i) => (
-            <img key={i} style={styles.img} src={image} />
+            <img key={i} style={styles.img} src={image} alt={`ID: ${i}`} />
           ))}
         </SwipeableViews>
         <MobileStepper
@@ -230,13 +209,21 @@ export default class ImageStep extends React.Component {
           activeStep={activeStep}
           style={styles.mobileStepper}
           nextButton={
-            <Button size="small" onClick={this.handleNext} disabled={activeStep === length - 1}>
+            <Button
+              size="small"
+              onClick={this.handleNext}
+              disabled={activeStep === length - 1}
+            >
               Next
               {<KeyboardArrowRight />}
             </Button>
           }
           backButton={
-            <Button size="small" onClick={this.handleBack} disabled={activeStep === 0}>
+            <Button
+              size="small"
+              onClick={this.handleBack}
+              disabled={activeStep === 0}
+            >
               {<KeyboardArrowLeft />}
               Back
             </Button>
@@ -244,52 +231,28 @@ export default class ImageStep extends React.Component {
         />
       </div>
     );
-  }
+  };
 
   createLoader = () => {
-    return (
-      <CircularProgress style={styles.loader} size={50} />
-    );
-  }
+    return <CircularProgress style={styles.loader} size={50} />;
+  };
 
   renderStepper = () => {
     const { loaded } = this.state;
     return loaded ? this.createStepper() : this.createLoader();
-  }
+  };
 
   render() {
-    const { activeStep, length, images, favedImages } = this.state;
+    const { images, favedImages } = this.state;
     return (
       <div style={styles.root}>
-        <div style={styles.stepContainer}>
-          {this.renderStepper()}
-        </div>
+        <div style={styles.stepContainer}>{this.renderStepper()}</div>
         <div style={styles.gridListContainer}>
-          <GridList
-            style={styles.gridList}
-            cols={0}
-            cellHeight={'auto'}
-            spacing={16}
-          >
-            {favedImages.map((favIndex) => {
-              return (
-                <GridListTile key={"tile.img"}>
-                  <img style={styles.favedImg} src={images[favIndex]} />
-                  <GridListTileBar
-                    title={`ID: ${favIndex}`}
-                    actionIcon={
-                      <IconButton>
-                        <Favorite
-                          style={styles.favBorder}
-                          onClick={()=>this.unFavImageById(favIndex)}
-                        />
-                      </IconButton>
-                    }
-                  />
-                </GridListTile>
-              );
-            })}
-          </GridList>
+          <ImageGallery
+            images={images}
+            ids={favedImages}
+            onClick={this.unFavImageById}
+          />
         </div>
       </div>
     );
