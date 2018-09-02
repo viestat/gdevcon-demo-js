@@ -58,15 +58,17 @@ const styles = {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    flexDirection: 'column'
+    flexDirection: 'column',
+    maxWidth: '100%'
   },
   stepContainer: {
+    width: '100%',
     maxWidth: 400,
-    minWidth: 400,
     flex: 1,
   },
   gridListContainer: {
     minWidth: '100%',
+    maxWidth: '100%',
   },
   header: {
     display: 'flex',
@@ -82,8 +84,8 @@ const styles = {
     width: '100%',
   },
   favedImg: {
-    minHeight: 191,
-    minWidth: 180,
+    maxHeight: 320,
+    maxWidth: 240,
     overflow: 'hidden',
     width: '100%',
   },
@@ -91,6 +93,7 @@ const styles = {
     flexWrap: 'nowrap',
     // Promote the list into his own layer on Chrome. This cost memory but helps keeping high FPS.
     transform: 'translateZ(0)',
+    margin: 12,
   },
   favBorder: {
     color: 'red'
@@ -238,7 +241,7 @@ export default class ImageStep extends React.Component {
         <div style={styles.gridListContainer}>
           <GridList
             style={styles.gridList}
-            cols={3}
+            cols={0}
             cellHeight={'auto'}
             spacing={16}
           >
