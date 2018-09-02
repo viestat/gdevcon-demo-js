@@ -1,18 +1,6 @@
 import React, { Component } from 'react';
-import Checkbox from '@material-ui/core/Checkbox';
-import Favorite from '@material-ui/icons/Favorite';
-import FavoriteBorder from '@material-ui/icons/FavoriteBorder';
-import IconButton from '@material-ui/core/IconButton';
-import SaveAltIcon from '@material-ui/icons/SaveAlt';
-import MobileStepper from '@material-ui/core/MobileStepper';
-import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
-import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
-import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
-import SwipeableViews from 'react-swipeable-views';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import ImageGallery from './ImageGallery';
+import { ImageGallery, Stepper } from './Components';
 
 const baseUrl = `http://${process.env.REACT_APP_URL}/image_processing`;
 
@@ -171,75 +159,23 @@ export default class ImageStep extends Component {
     return;
   };
 
-  createStepper = () => {
-    const { activeStep, length, images } = this.state;
-    return (
-      <div>
-        <Paper square elevation={0} style={styles.header}>
-          <Checkbox
-            icon={<FavoriteBorder />}
-            checkedIcon={<Favorite />}
-            checked={this.isFaved()}
-            value="checkedH"
-            onChange={this.handleFav}
-          />
-          <IconButton aria-label="SaveAlt">
-            <a href={images[activeStep]} download>
-              <SaveAltIcon />
-            </a>
-          </IconButton>
-          <Typography>
-            IMG ID:
-            {activeStep}
-          </Typography>
-        </Paper>
-        <SwipeableViews
-          axis={'x'}
-          index={this.state.activeStep}
-          onChangeIndex={this.handleStepChange}
-          enableMouseEvents
-        >
-          {images.map((image, i) => (
-            <img key={i} style={styles.img} src={image} alt={`ID: ${i}`} />
-          ))}
-        </SwipeableViews>
-        <MobileStepper
-          steps={length}
-          position="static"
-          activeStep={activeStep}
-          style={styles.mobileStepper}
-          nextButton={
-            <Button
-              size="small"
-              onClick={this.handleNext}
-              disabled={activeStep === length - 1}
-            >
-              Next
-              {<KeyboardArrowRight />}
-            </Button>
-          }
-          backButton={
-            <Button
-              size="small"
-              onClick={this.handleBack}
-              disabled={activeStep === 0}
-            >
-              {<KeyboardArrowLeft />}
-              Back
-            </Button>
-          }
-        />
-      </div>
-    );
-  };
-
-  createLoader = () => {
-    return <CircularProgress style={styles.loader} size={50} />;
-  };
-
   renderStepper = () => {
-    const { loaded } = this.state;
-    return loaded ? this.createStepper() : this.createLoader();
+    const { activeStep, length, images, loaded } = this.state;
+    const stepper = (
+      <Stepper
+        activeStep={activeStep}
+        length={length}
+        images={images}
+        isFaved={this.isFaved}
+        handleFav={this.handleFav}
+        onChangeIndex={this.handleStepChange}
+        onNext={this.handleNext}
+        onBack={this.handleBack}
+      />
+    );
+    const loader = <CircularProgress style={styles.loader} size={50} />;
+
+    return loaded ? stepper : loader;
   };
 
   render() {
