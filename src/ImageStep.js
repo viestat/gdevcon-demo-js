@@ -16,7 +16,7 @@ import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import SwipeableViews from 'react-swipeable-views';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
-const baseUrl = 'http://192.168.192.42:8001/image_processing';
+const baseUrl = `http://${process.env.REACT_APP_URL}/image_processing`;
 
 const bufferLength = `${baseUrl}/image_buffer_length`;
 
