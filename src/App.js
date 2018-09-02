@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import IconButton from '@material-ui/core/IconButton';
+import Github from '@material-ui/docs/svgIcons/GitHub';
 import logo from './gdevcon.png';
 import ImageStep from './ImageStep';
 import './App.css';
@@ -16,11 +18,18 @@ class App extends Component {
         </main>
         <footer>
           <p>
-            Made with{' '}
-            <span role="img" aria-label="heart">
-              ❤️
-            </span>{' '}
-            by <a href="https://github.com/viestat">@viestat</a>
+            Check out the source code
+            <span>
+              <IconButton aria-label="GitHub">
+                <a
+                  href={'https://github.com/viestat/gdevcon-demo-js'}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Github />
+                </a>
+              </IconButton>
+            </span>
           </p>
         </footer>
       </div>
