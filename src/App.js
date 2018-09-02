@@ -15,7 +15,13 @@ class App extends Component {
           <ImageStep />
         </main>
         <footer>
-          <p>Made with ❤️ by <a href="https://github.com/viestat">@viestat</a></p>
+          <p>
+            Made with{' '}
+            <span role="img" aria-label="heart">
+              ❤️
+            </span>{' '}
+            by <a href="https://github.com/viestat">@viestat</a>
+          </p>
         </footer>
       </div>
     );
